@@ -248,14 +248,83 @@ class Etablissements
     private $MailEdito1;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="text")
      */
-    private $text;
+    private $MailEdito2;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $StatutEnvoi;
+
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $StatutEnvoi2;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $PresenceGratuite;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $BloqueTxtRef;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $DeleguesTemporaires_Identifiant;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $InternatFille;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $InternatGarcon;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $InternatPermanent;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $InternatSemaine;
+
+
+
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=7)
+     */
+    private $Latitude;
+
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=7)
+     */
+    private $Longitude;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $ResultatGeolocalisation;
+
+    /**
+     * @ORM\Column(type="string", length=20)
+     */
+    private $GestionCoordonneesGPS;
+
+    /**
+     * @ORM\Column(type="string", length=20)
+     */
+    private $OptionPrint;
+
+
 
     public function getIdentifiant(): ?string
     {
@@ -653,12 +722,12 @@ class Etablissements
         return $this;
     }
 
-    public function getExportWeb(): ?boolean
+    public function getExportWeb(): ?bool
     {
         return $this->ExportWeb;
     }
 
-    public function setExportWeb(boolean $ExportWeb): self
+    public function setExportWeb(bool $ExportWeb): self
     {
         $this->ExportWeb = $ExportWeb;
 
@@ -814,10 +883,188 @@ class Etablissements
         return $this->text;
     }
 
-    public function setText(string $text): self
+    public function getMailEdito2(): ?string
     {
-        $this->text = $text;
+        return $this->MailEdito2;
+    }
+
+    public function setMailEdito2(string $MailEdito2): self
+    {
+        $this->MailEdito2 = $MailEdito2;
 
         return $this;
     }
+
+    public function getStatutEnvoi(): ?string
+    {
+        return $this->StatutEnvoi;
+    }
+
+    public function setStatutEnvoi(?string $StatutEnvoi): self
+    {
+        $this->StatutEnvoi = $StatutEnvoi;
+
+        return $this;
+    }
+
+    public function getStatutEnvoi2(): ?string
+    {
+        return $this->StatutEnvoi2;
+    }
+
+    public function setStatutEnvoi2(?string $StatutEnvoi2): self
+    {
+        $this->StatutEnvoi2 = $StatutEnvoi2;
+
+        return $this;
+    }
+
+    public function getPresenceGratuite(): ?bool
+    {
+        return $this->PresenceGratuite;
+    }
+
+    public function setPresenceGratuite(bool $PresenceGratuite): self
+    {
+        $this->PresenceGratuite = $PresenceGratuite;
+
+        return $this;
+    }
+
+    public function getBloqueTxtRef(): ?bool
+    {
+        return $this->BloqueTxtRef;
+    }
+
+    public function setBloqueTxtRef(bool $BloqueTxtRef): self
+    {
+        $this->BloqueTxtRef = $BloqueTxtRef;
+
+        return $this;
+    }
+
+    public function getDeleguesTemporairesIdentifiant(): ?int
+    {
+        return $this->DeleguesTemporaires_Identifiant;
+    }
+
+    public function setDeleguesTemporairesIdentifiant(int $DeleguesTemporaires_Identifiant): self
+    {
+        $this->DeleguesTemporaires_Identifiant = $DeleguesTemporaires_Identifiant;
+
+        return $this;
+    }
+
+    public function getInternatFille(): ?bool
+    {
+        return $this->InternatFille;
+    }
+
+    public function setInternatFille(?bool $InternatFille): self
+    {
+        $this->InternatFille = $InternatFille;
+
+        return $this;
+    }
+
+    public function getInternatGarcon(): ?bool
+    {
+        return $this->InternatGarcon;
+    }
+
+    public function setInternatGarcon(?bool $InternatGarcon): self
+    {
+        $this->InternatGarcon = $InternatGarcon;
+
+        return $this;
+    }
+
+    public function getInternatPermanent(): ?bool
+    {
+        return $this->InternatPermanent;
+    }
+
+    public function setInternatPermanent(?bool $InternatPermanent): self
+    {
+        $this->InternatPermanent = $InternatPermanent;
+
+        return $this;
+    }
+
+    public function getInternatSemaine(): ?bool
+    {
+        return $this->InternatSemaine;
+    }
+
+    public function setInternatSemaine(?bool $InternatSemaine): self
+    {
+        $this->InternatSemaine = $InternatSemaine;
+
+        return $this;
+    }
+
+
+
+
+    public function getLatitude(): ?string
+    {
+        return $this->Latitude;
+    }
+
+    public function setLatitude(string $Latitude): self
+    {
+        $this->Latitude = $Latitude;
+
+        return $this;
+    }
+
+    public function getLongitude(): ?string
+    {
+        return $this->Longitude;
+    }
+
+    public function setLongitude(string $Longitude): self
+    {
+        $this->Longitude = $Longitude;
+
+        return $this;
+    }
+
+    public function getResultatGeolocalisation(): ?string
+    {
+        return $this->ResultatGeolocalisation;
+    }
+
+    public function setResultatGeolocalisation(string $ResultatGeolocalisation): self
+    {
+        $this->ResultatGeolocalisation = $ResultatGeolocalisation;
+
+        return $this;
+    }
+
+    public function getGestionCoordonneesGPS(): ?string
+    {
+        return $this->GestionCoordonneesGPS;
+    }
+
+    public function setGestionCoordonneesGPS(string $GestionCoordonneesGPS): self
+    {
+        $this->GestionCoordonneesGPS = $GestionCoordonneesGPS;
+
+        return $this;
+    }
+
+    public function getOptionPrint(): ?string
+    {
+        return $this->OptionPrint;
+    }
+
+    public function setOptionPrint(string $OptionPrint): self
+    {
+        $this->OptionPrint = $OptionPrint;
+
+        return $this;
+    }
+
+
 }
