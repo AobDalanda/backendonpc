@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\OrdresParticipationsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -76,6 +78,22 @@ class OrdresParticipations
      * @ORM\Column(type="text", nullable=true)
      */
     private $Commentaire;
+
+    /**
+     * @ORM\OneToMany(targetEntity=OrdresParticipationsProduits::class, mappedBy="ordreparticipations", orphanRemoval=true)
+     */
+    private $ordresParticipationsProduits;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Clients::class, inversedBy="ordresparticipations")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $clients;
+
+    public function __construct()
+    {
+        $this->ordresParticipationsProduits = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -222,6 +240,48 @@ class OrdresParticipations
     public function setCommentaire(?string $Commentaire): self
     {
         $this->Commentaire = $Commentaire;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OrdresParticipationsProduits[]
+     */
+    public function getOrdresParticipationsProduits(): Collection
+    {
+        return $this->ordresParticipationsProduits;
+    }
+
+    public function addOrdresParticipationsProduit(OrdresParticipationsProduits $ordresParticipationsProduit): self
+    {
+        if (!$this->ordresParticipationsProduits->contains($ordresParticipationsProduit)) {
+            $this->ordresParticipationsProduits[] = $ordresParticipationsProduit;
+            $ordresParticipationsProduit->setOrdreparticipations($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrdresParticipationsProduit(OrdresParticipationsProduits $ordresParticipationsProduit): self
+    {
+        if ($this->ordresParticipationsProduits->removeElement($ordresParticipationsProduit)) {
+            // set the owning side to null (unless already changed)
+            if ($ordresParticipationsProduit->getOrdreparticipations() === $this) {
+                $ordresParticipationsProduit->setOrdreparticipations(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getClients(): ?Clients
+    {
+        return $this->clients;
+    }
+
+    public function setClients(?Clients $clients): self
+    {
+        $this->clients = $clients;
 
         return $this;
     }

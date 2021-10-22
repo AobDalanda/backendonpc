@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EtablissementsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -323,6 +325,64 @@ class Etablissements
      * @ORM\Column(type="string", length=20)
      */
     private $OptionPrint;
+
+    /**
+     * @ORM\OneToMany(targetEntity=OrdresParticipationsProduits::class, mappedBy="etablissements", orphanRemoval=true)
+     */
+    private $ordreparticipationproduit;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Dioceses::class, inversedBy="etablissments")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $dioceses;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Rubriques::class, inversedBy="etablissements")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $rubriques;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=SourcesMisesAJour::class, inversedBy="etablissements")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $sourcesMisesAJour;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=CategoriesOrganismes::class, inversedBy="etablissements")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $categoriesOrganismes;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=TypesEtablissements::class, inversedBy="etablissements")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $typesEtablissements;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Villes::class, inversedBy="etablissements")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $villes;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Clients::class, inversedBy="etablissements")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $clients;
+
+    /**
+     * @ORM\OneToMany(targetEntity=OrdresParticipationsProduits::class, mappedBy="etablissements", orphanRemoval=true)
+     */
+    private $ordresParticipationsProduits;
+
+    public function __construct()
+    {
+        $this->ordreparticipationproduit = new ArrayCollection();
+        $this->ordresParticipationsProduits = new ArrayCollection();
+    }
 
 
 
@@ -1062,6 +1122,150 @@ class Etablissements
     public function setOptionPrint(string $OptionPrint): self
     {
         $this->OptionPrint = $OptionPrint;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OrdresParticipationsProduits[]
+     */
+    public function getOrdreparticipationproduit(): Collection
+    {
+        return $this->ordreparticipationproduit;
+    }
+
+    public function addOrdreparticipationproduit(OrdresParticipationsProduits $ordreparticipationproduit): self
+    {
+        if (!$this->ordreparticipationproduit->contains($ordreparticipationproduit)) {
+            $this->ordreparticipationproduit[] = $ordreparticipationproduit;
+            $ordreparticipationproduit->setEtablissements($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrdreparticipationproduit(OrdresParticipationsProduits $ordreparticipationproduit): self
+    {
+        if ($this->ordreparticipationproduit->removeElement($ordreparticipationproduit)) {
+            // set the owning side to null (unless already changed)
+            if ($ordreparticipationproduit->getEtablissements() === $this) {
+                $ordreparticipationproduit->setEtablissements(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getDioceses(): ?Dioceses
+    {
+        return $this->dioceses;
+    }
+
+    public function setDioceses(?Dioceses $dioceses): self
+    {
+        $this->dioceses = $dioceses;
+
+        return $this;
+    }
+
+    public function getRubriques(): ?Rubriques
+    {
+        return $this->rubriques;
+    }
+
+    public function setRubriques(?Rubriques $rubriques): self
+    {
+        $this->rubriques = $rubriques;
+
+        return $this;
+    }
+
+    public function getSourcesMisesAJour(): ?SourcesMisesAJour
+    {
+        return $this->sourcesMisesAJour;
+    }
+
+    public function setSourcesMisesAJour(?SourcesMisesAJour $sourcesMisesAJour): self
+    {
+        $this->sourcesMisesAJour = $sourcesMisesAJour;
+
+        return $this;
+    }
+
+    public function getCategoriesOrganismes(): ?CategoriesOrganismes
+    {
+        return $this->categoriesOrganismes;
+    }
+
+    public function setCategoriesOrganismes(?CategoriesOrganismes $categoriesOrganismes): self
+    {
+        $this->categoriesOrganismes = $categoriesOrganismes;
+
+        return $this;
+    }
+
+    public function getTypesEtablissements(): ?TypesEtablissements
+    {
+        return $this->typesEtablissements;
+    }
+
+    public function setTypesEtablissements(?TypesEtablissements $typesEtablissements): self
+    {
+        $this->typesEtablissements = $typesEtablissements;
+
+        return $this;
+    }
+
+    public function getVilles(): ?Villes
+    {
+        return $this->villes;
+    }
+
+    public function setVilles(?Villes $villes): self
+    {
+        $this->villes = $villes;
+
+        return $this;
+    }
+
+    public function getClients(): ?Clients
+    {
+        return $this->clients;
+    }
+
+    public function setClients(?Clients $clients): self
+    {
+        $this->clients = $clients;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OrdresParticipationsProduits[]
+     */
+    public function getOrdresParticipationsProduits(): Collection
+    {
+        return $this->ordresParticipationsProduits;
+    }
+
+    public function addOrdresParticipationsProduit(OrdresParticipationsProduits $ordresParticipationsProduit): self
+    {
+        if (!$this->ordresParticipationsProduits->contains($ordresParticipationsProduit)) {
+            $this->ordresParticipationsProduits[] = $ordresParticipationsProduit;
+            $ordresParticipationsProduit->setEtablissements($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrdresParticipationsProduit(OrdresParticipationsProduits $ordresParticipationsProduit): self
+    {
+        if ($this->ordresParticipationsProduits->removeElement($ordresParticipationsProduit)) {
+            // set the owning side to null (unless already changed)
+            if ($ordresParticipationsProduit->getEtablissements() === $this) {
+                $ordresParticipationsProduit->setEtablissements(null);
+            }
+        }
 
         return $this;
     }

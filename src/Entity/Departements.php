@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\DepartementsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,6 +33,22 @@ class Departements
      * @ORM\Column(type="text", nullable=true)
      */
     private $Academie;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Regions::class, inversedBy="departements")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $regions;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Villes::class, mappedBy="departements", orphanRemoval=true)
+     */
+    private $villes;
+
+    public function __construct()
+    {
+        $this->villes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -69,6 +87,48 @@ class Departements
     public function setAcademie(?string $Academie): self
     {
         $this->Academie = $Academie;
+
+        return $this;
+    }
+
+    public function getRegions(): ?Regions
+    {
+        return $this->regions;
+    }
+
+    public function setRegions(?Regions $regions): self
+    {
+        $this->regions = $regions;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Villes[]
+     */
+    public function getVilles(): Collection
+    {
+        return $this->villes;
+    }
+
+    public function addVille(Villes $ville): self
+    {
+        if (!$this->villes->contains($ville)) {
+            $this->villes[] = $ville;
+            $ville->setDepartements($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVille(Villes $ville): self
+    {
+        if ($this->villes->removeElement($ville)) {
+            // set the owning side to null (unless already changed)
+            if ($ville->getDepartements() === $this) {
+                $ville->setDepartements(null);
+            }
+        }
 
         return $this;
     }

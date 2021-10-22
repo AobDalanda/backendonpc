@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProduitsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -141,6 +143,16 @@ class Produits
      * @ORM\Column(type="float")
      */
     private $PrixDelta;
+
+    /**
+     * @ORM\OneToMany(targetEntity=OrdresParticipationsProduits::class, mappedBy="produits", orphanRemoval=true)
+     */
+    private $ordresParticipationsProduits;
+
+    public function __construct()
+    {
+        $this->ordresParticipationsProduits = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -443,6 +455,36 @@ class Produits
     public function setPrixDelta(float $PrixDelta): self
     {
         $this->PrixDelta = $PrixDelta;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OrdresParticipationsProduits[]
+     */
+    public function getOrdresParticipationsProduits(): Collection
+    {
+        return $this->ordresParticipationsProduits;
+    }
+
+    public function addOrdresParticipationsProduit(OrdresParticipationsProduits $ordresParticipationsProduit): self
+    {
+        if (!$this->ordresParticipationsProduits->contains($ordresParticipationsProduit)) {
+            $this->ordresParticipationsProduits[] = $ordresParticipationsProduit;
+            $ordresParticipationsProduit->setProduits($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrdresParticipationsProduit(OrdresParticipationsProduits $ordresParticipationsProduit): self
+    {
+        if ($this->ordresParticipationsProduits->removeElement($ordresParticipationsProduit)) {
+            // set the owning side to null (unless already changed)
+            if ($ordresParticipationsProduit->getProduits() === $this) {
+                $ordresParticipationsProduit->setProduits(null);
+            }
+        }
 
         return $this;
     }

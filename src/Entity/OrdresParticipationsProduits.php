@@ -27,6 +27,26 @@ class OrdresParticipationsProduits
      */
     private $Empl;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Produits::class, inversedBy="ordresParticipationsProduits")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $produits;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=OrdresParticipations::class, inversedBy="ordresParticipationsProduits")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $ordreparticipations;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Etablissements::class, inversedBy="ordresParticipationsProduits")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $etablissements;
+
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -55,4 +75,42 @@ class OrdresParticipationsProduits
 
         return $this;
     }
+
+    public function getProduits(): ?Produits
+    {
+        return $this->produits;
+    }
+
+    public function setProduits(?Produits $produits): self
+    {
+        $this->produits = $produits;
+
+        return $this;
+    }
+
+    public function getOrdreparticipations(): ?OrdresParticipations
+    {
+        return $this->ordreparticipations;
+    }
+
+    public function setOrdreparticipations(?OrdresParticipations $ordreparticipations): self
+    {
+        $this->ordreparticipations = $ordreparticipations;
+
+        return $this;
+    }
+
+    public function getEtablissements(): ?Etablissements
+    {
+        return $this->etablissements;
+    }
+
+    public function setEtablissements(?Etablissements $etablissements): self
+    {
+        $this->etablissements = $etablissements;
+
+        return $this;
+    }
+
+
 }

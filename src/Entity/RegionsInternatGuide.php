@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\RegionsInternatGuideRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,6 +33,16 @@ class RegionsInternatGuide
      * @ORM\Column(type="integer")
      */
     private $Tri;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Regions::class, mappedBy="regioninternatguide", orphanRemoval=true)
+     */
+    private $regions;
+
+    public function __construct()
+    {
+        $this->regions = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -69,6 +81,36 @@ class RegionsInternatGuide
     public function setTri(int $Tri): self
     {
         $this->Tri = $Tri;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Regions[]
+     */
+    public function getRegions(): Collection
+    {
+        return $this->regions;
+    }
+
+    public function addRegion(Regions $region): self
+    {
+        if (!$this->regions->contains($region)) {
+            $this->regions[] = $region;
+            $region->setRegioninternatguide($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRegion(Regions $region): self
+    {
+        if ($this->regions->removeElement($region)) {
+            // set the owning side to null (unless already changed)
+            if ($region->getRegioninternatguide() === $this) {
+                $region->setRegioninternatguide(null);
+            }
+        }
 
         return $this;
     }

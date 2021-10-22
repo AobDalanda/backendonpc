@@ -19,6 +19,62 @@ class AllUsersRepository extends ServiceEntityRepository
         parent::__construct($registry, AllUsers::class);
     }
 
+    /**
+     * Retourne la liste des utilisateurs de la base de données
+     * Retourne un tableau
+     */
+      public function apiFindAll(): array
+      {
+          $qb= $this->createQueryBuilder('u')
+              ->select('u.id','u.Nom','u.Prenom','u.Mail','u.TypeUtilisateur')
+              ->orderBy('u.Nom','DESC');
+          $query= $qb->getQuery();
+          return $query->execute();
+      }
+
+   /**
+    * Retourne les données d'un utilisateur donnée
+    * retourne un array
+    */
+       public function findSingleUser($id):array
+       {
+           $qb=$this->createQueryBuilder('u')
+               ->select('u.id','u.Nom','u.Prenom','u.Mail','u.TypeUtilisateur')
+               ->where('u.id = :identifiant')
+               ->setParameter('identifiant', $id);
+           $query= $qb->getQuery();
+           return $query->execute();
+
+       }
+
+    /**
+     * @param $mail
+     * @return array
+     */
+       public function finduserByMail($mail):array
+       {
+           $qd=$this->createQueryBuilder('u')
+               ->select('u.id','u.Nom','u.Prenom','u.Mail','u.TypeUtilisateur','u.MotDePasse')
+               ->where('u.Mail = :mail')
+               ->setParameter('mail', $mail);
+           $query= $qd->getQuery();
+           return $query->execute();
+       }
+
+
+
+       /**
+        * verify email to avoid duplication
+        */
+       public function singlemail($email)
+       {
+           $qd=$this->createQueryBuilder('u')
+               ->select('count(u.id)')
+               ->where('u.Mail = :mail')
+               ->setParameter('mail', $email);
+           $query= $qd->getQuery();
+           return $query->execute();
+       }
     // /**
     //  * @return AllUsers[] Returns an array of AllUsers objects
     //  */

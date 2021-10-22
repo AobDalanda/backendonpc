@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ClientsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -56,6 +58,22 @@ class Clients
      * @ORM\Column(type="integer")
      */
     private $Code_Postal;
+
+    /**
+     * @ORM\OneToMany(targetEntity=OrdresParticipations::class, mappedBy="clients", orphanRemoval=true)
+     */
+    private $ordresparticipations;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Etablissements::class, mappedBy="clients", orphanRemoval=true)
+     */
+    private $etablissements;
+
+    public function __construct()
+    {
+        $this->ordresparticipations = new ArrayCollection();
+        $this->etablissements = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -154,6 +172,66 @@ class Clients
     public function setCodePostal(int $Code_Postal): self
     {
         $this->Code_Postal = $Code_Postal;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OrdresParticipations[]
+     */
+    public function getOrdresparticipations(): Collection
+    {
+        return $this->ordresparticipations;
+    }
+
+    public function addOrdresparticipation(OrdresParticipations $ordresparticipation): self
+    {
+        if (!$this->ordresparticipations->contains($ordresparticipation)) {
+            $this->ordresparticipations[] = $ordresparticipation;
+            $ordresparticipation->setClients($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrdresparticipation(OrdresParticipations $ordresparticipation): self
+    {
+        if ($this->ordresparticipations->removeElement($ordresparticipation)) {
+            // set the owning side to null (unless already changed)
+            if ($ordresparticipation->getClients() === $this) {
+                $ordresparticipation->setClients(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Etablissements[]
+     */
+    public function getEtablissements(): Collection
+    {
+        return $this->etablissements;
+    }
+
+    public function addEtablissement(Etablissements $etablissement): self
+    {
+        if (!$this->etablissements->contains($etablissement)) {
+            $this->etablissements[] = $etablissement;
+            $etablissement->setClients($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEtablissement(Etablissements $etablissement): self
+    {
+        if ($this->etablissements->removeElement($etablissement)) {
+            // set the owning side to null (unless already changed)
+            if ($etablissement->getClients() === $this) {
+                $etablissement->setClients(null);
+            }
+        }
 
         return $this;
     }

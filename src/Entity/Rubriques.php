@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\RubriquesRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -61,6 +63,16 @@ class Rubriques
      * @ORM\Column(type="boolean")
      */
     private $ParutionMEP;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Etablissements::class, mappedBy="rubriques", orphanRemoval=true)
+     */
+    private $etablissements;
+
+    public function __construct()
+    {
+        $this->etablissements = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -171,6 +183,36 @@ class Rubriques
     public function setParutionMEP(bool $ParutionMEP): self
     {
         $this->ParutionMEP = $ParutionMEP;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Etablissements[]
+     */
+    public function getEtablissements(): Collection
+    {
+        return $this->etablissements;
+    }
+
+    public function addEtablissement(Etablissements $etablissement): self
+    {
+        if (!$this->etablissements->contains($etablissement)) {
+            $this->etablissements[] = $etablissement;
+            $etablissement->setRubriques($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEtablissement(Etablissements $etablissement): self
+    {
+        if ($this->etablissements->removeElement($etablissement)) {
+            // set the owning side to null (unless already changed)
+            if ($etablissement->getRubriques() === $this) {
+                $etablissement->setRubriques(null);
+            }
+        }
 
         return $this;
     }
