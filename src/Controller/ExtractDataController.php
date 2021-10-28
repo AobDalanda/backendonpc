@@ -8,9 +8,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ExtractDataController extends AbstractController
 {
-    #[Route('/extract/data', name: 'extract_data')]
-    public function index(): Response
+    #[Route('/extract/sourcemaj', name: 'extract_maj')]
+    public function data(): Response
     {
+
+
         return $this->render('extract_data/index.html.twig', [
             'controller_name' => 'ExtractDataController',
         ]);
