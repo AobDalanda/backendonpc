@@ -16,6 +16,7 @@ use Symfony\Component\Serializer\Serializer;
 //#[Route('/users', name: 'api_')]
 class UsersController extends AbstractController
 {
+
     #[Route('/users', name: 'userListe', methods: 'Get')]
     public function liste(AllUsersRepository $allUsersRepository): Response
     {
@@ -36,6 +37,9 @@ class UsersController extends AbstractController
          } ]);
          // dd($jsonContent);
         $response= new Response($jsonContent);
+        $response->headers->set('Content-Type', 'application/json');
+        // Allow all websites
+        $response->headers->set('Access-Control-Allow-Origin', '*');
         return $response;
 
     }
@@ -81,9 +85,6 @@ class UsersController extends AbstractController
                  $em->persist($user);
                  $em->flush();
                  return new Response('Ok',201);
-
-
-
          }
         return new Response('not ok ',404);
     }
@@ -91,17 +92,21 @@ class UsersController extends AbstractController
     /**
      *
      */
-    #[Route('/users/loguer',name: 'loguer', methods: 'Post')]
+    #[Route('/users/login',name: 'login', methods: 'Post')]
     public function logue(Request $request, AllUsersRepository $allUsersRepo)
     {   //recuperation des donnees
+
         if(!$request->isXmlHttpRequest()) {
-            $donnees = json_decode($request->getContent());
-            $identifiant = $donnees->Mail;
-            $sendPassword=$donnees->MotDePasse;
+            //  $donnees = json_encode($request->getContent());
+            $donnees =  $request->getContent();
+            $donnees =  json_decode($donnees,true);
+            //dd($donnees[0]['Mail']);
+             $identifiant = $donnees[0]['Mail']; //$identifiant = $donnees.mail();
+            $sendPassword=$donnees[0]['MotDePasse']; //$sendPassword=$donnees->MotDePasse;
             $connectedUser = $allUsersRepo->finduserByMail($identifiant);
             $hashedPassword=$connectedUser[0]['MotDePasse'];
             $connectedUser[0]['MotDePasse']='';
-            unset($connectedUser[0][5]);
+            unset($connectedUser[0]['MotDePasse']);
             //dd($connectedUser);
             //On utilise un encodeur json
             $encoders = [new JsonEncoder()];
@@ -114,9 +119,11 @@ class UsersController extends AbstractController
                 'circular_reference_handler'=>function($object){   return $object->getId();
                 } ]);
             if (password_verify($sendPassword, $hashedPassword)) {
-                return new  Response($jsonContent,202);
+                return new  Response($jsonContent,200);
+
             } else {
-                return new  Response('Invalid password.');
+
+                return new  Response('Invalid password.',200);
             }
         }
         return new Response('not ok ',404);

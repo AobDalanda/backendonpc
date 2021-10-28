@@ -54,7 +54,7 @@ class AllUsersRepository extends ServiceEntityRepository
        public function finduserByMail($mail):array
        {
            $qd=$this->createQueryBuilder('u')
-               ->select('u.id','u.Nom','u.Prenom','u.Mail','u.TypeUtilisateur','u.MotDePasse')
+               ->select('u.Nom','u.Prenom','u.Mail','u.TypeUtilisateur','u.MotDePasse')
                ->where('u.Mail = :mail')
                ->setParameter('mail', $mail);
            $query= $qd->getQuery();
