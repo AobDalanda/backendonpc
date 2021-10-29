@@ -60,8 +60,18 @@ class AllUsersRepository extends ServiceEntityRepository
            $query= $qd->getQuery();
            return $query->execute();
        }
-
-
+    /**
+     * Find all delegues
+     */
+          public function findAllDelegues():array
+          {
+              $qd=$this->createQueryBuilder('u')
+                  ->select ('u.id','u.Prenom','u.Nom' )
+                  ->where('u.TypeUtilisateur=:typeUtilisateur')
+                  ->setParameter('typeUtilisateur','Délégué');
+              $query= $qd->getQuery();
+              return $query->execute();
+          }
 
        /**
         * verify email to avoid duplication

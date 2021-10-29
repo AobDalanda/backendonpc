@@ -19,6 +19,31 @@ class SourcesMisesAJourRepository extends ServiceEntityRepository
         parent::__construct($registry, SourcesMisesAJour::class);
     }
 
+
+
+    /**
+     * find only Libelle from the table
+     */
+    public function findOnlyLibelle()
+    {
+        $qd=$this->createQueryBuilder('s')
+            ->select('s.Libelle') ;
+        $query= $qd->getQuery();
+        return $query->execute();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
     // /**
     //  * @return SourcesMisesAJour[] Returns an array of SourcesMisesAJour objects
     //  */
