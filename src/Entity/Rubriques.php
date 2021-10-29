@@ -55,12 +55,12 @@ class Rubriques
     private $LibelleMEP;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=50, nullable=true)
      */
     private $Items_Identifiant;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="string", columnDefinition="ENUM('oui', 'non')")
      */
     private $ParutionMEP;
 
@@ -180,7 +180,7 @@ class Rubriques
         return $this->ParutionMEP;
     }
 
-    public function setParutionMEP(bool $ParutionMEP): self
+    public function setParutionMEP(string $ParutionMEP): self
     {
         $this->ParutionMEP = $ParutionMEP;
 

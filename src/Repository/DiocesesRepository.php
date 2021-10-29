@@ -19,6 +19,18 @@ class DiocesesRepository extends ServiceEntityRepository
         parent::__construct($registry, Dioceses::class);
     }
 
+
+    /**
+     * find only Libelle from the table
+     */
+    public function findOnlyLibelle()
+    {
+        $qd=$this->createQueryBuilder('d')
+            ->select('d.id','d.Libelle') ;
+        $query= $qd->getQuery();
+        return $query->execute();
+    }
+
     // /**
     //  * @return Dioceses[] Returns an array of Dioceses objects
     //  */

@@ -65,7 +65,6 @@ class SourcesMisesAJour
             $this->etablissements[] = $etablissement;
             $etablissement->setSourcesMisesAJour($this);
         }
-
         return $this;
     }
 
