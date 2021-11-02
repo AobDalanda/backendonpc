@@ -19,6 +19,19 @@ class TypesEtablissementsRepository extends ServiceEntityRepository
         parent::__construct($registry, TypesEtablissements::class);
     }
 
+
+    /**
+     * find DATA from the table
+     */
+    public function findTypeEtabl()
+    {
+        $qd=$this->createQueryBuilder('t')
+            ->select('t.id','t.Identifiant','t.Libelle') ;
+        $query= $qd->getQuery();
+        return $query->execute();
+    }
+
+
     // /**
     //  * @return TypesEtablissements[] Returns an array of TypesEtablissements objects
     //  */

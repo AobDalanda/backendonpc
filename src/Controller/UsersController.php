@@ -74,11 +74,11 @@ class UsersController extends AbstractController
         {    $donnees = json_decode($request->getContent());
              //On instancie un nouvel utilisateur
              $user=new AllUsers();
-             $user->setNom($donnees->Nom);
-             $user->setPrenom($donnees->Prenom);
-             $user->setMail($donnees->Mail);
-             $user->setTypeUtilisateur($donnees->TypeUtilisateur);
-             $receivedPasse=($donnees->MotDePasse);
+             $user->setNom($donnees->nom);
+             $user->setPrenom($donnees->prenom);
+             $user->setMail($donnees->email);
+             $user->setTypeUtilisateur($donnees->type_utilisateur);
+             $receivedPasse=($donnees->password);
              $hashedPassword=password_hash($receivedPasse, PASSWORD_DEFAULT);
              $user->setMotDePasse($hashedPassword);
                  $em=$this->getDoctrine()->getManager();

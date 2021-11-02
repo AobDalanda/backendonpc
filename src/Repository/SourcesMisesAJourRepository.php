@@ -24,10 +24,10 @@ class SourcesMisesAJourRepository extends ServiceEntityRepository
     /**
      * find only Libelle from the table
      */
-    public function findOnlyLibelle()
+    public function findSourceMAJ()
     {
         $qd=$this->createQueryBuilder('s')
-            ->select('s.Libelle') ;
+            ->select('s.id','s.Libelle') ;
         $query= $qd->getQuery();
         return $query->execute();
     }
