@@ -62,6 +62,7 @@ class Rubriques
     /**
      * @ORM\Column(type="string", columnDefinition="ENUM('oui', 'non')")
      */
+        //* @ORM\Column(type="string", columnDefinition="ENUM('oui', 'non')")
     private $ParutionMEP;
 
     /**
@@ -175,7 +176,7 @@ class Rubriques
         return $this;
     }
 
-    public function getParutionMEP(): ?bool
+    public function getParutionMEP(): ?string
     {
         return $this->ParutionMEP;
     }

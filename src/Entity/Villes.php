@@ -50,6 +50,16 @@ class Villes
      */
     private $etablissements;
 
+    /**
+     * @ORM\Column(type="string", length=5)
+     */
+    private $Departements_Regions_Identifiant;
+
+    /**
+     * @ORM\Column(type="string", length=4)
+     */
+    private $Departements_Numero;
+
     public function __construct()
     {
         $this->etablissements = new ArrayCollection();
@@ -146,6 +156,30 @@ class Villes
                 $etablissement->setVilles(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDepartementsRegionsIdentifiant(): ?string
+    {
+        return $this->Departements_Regions_Identifiant;
+    }
+
+    public function setDepartementsRegionsIdentifiant(string $Departements_Regions_Identifiant): self
+    {
+        $this->Departements_Regions_Identifiant = $Departements_Regions_Identifiant;
+
+        return $this;
+    }
+
+    public function getDepartementsNumero(): ?string
+    {
+        return $this->Departements_Numero;
+    }
+
+    public function setDepartementsNumero(string $Departements_Numero): self
+    {
+        $this->Departements_Numero = $Departements_Numero;
 
         return $this;
     }
