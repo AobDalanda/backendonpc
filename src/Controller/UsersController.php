@@ -169,7 +169,7 @@ class UsersController extends AbstractController
             $entityManager->persist($theUser);
             $entityManager->flush();
             $theUser1 = $allUsersRepository->find($id);
-            dd($theUser1);
+           //dd($theUser1);
             return new Response('ok', 201);
         } else {
             return new Response('not ok ', 404);
