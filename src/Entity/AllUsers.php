@@ -49,6 +49,20 @@ class AllUsers
      */
     private $villes;
 
+    /**
+     * @ORM\Column(type="string", length=10)
+     */
+    private $Status;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $CreationDate;
+
+
+
+
+
     public function __construct()
     {
         $this->villes = new ArrayCollection();
@@ -148,4 +162,31 @@ class AllUsers
 
         return $this;
     }
+
+    public function getStatus(): ?string
+    {
+        return $this->Status;
+    }
+
+    public function setStatus(string $Status): self
+    {
+        $this->Status = $Status;
+
+        return $this;
+    }
+
+    public function getCreationDate(): ?\DateTimeInterface
+    {
+        return $this->CreationDate;
+    }
+
+    public function setCreationDate(?\DateTimeInterface $CreationDate): self
+    {
+        $this->CreationDate = $CreationDate;
+
+        return $this;
+    }
+
+
+
 }

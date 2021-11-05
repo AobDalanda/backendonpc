@@ -39,13 +39,19 @@ class AllUsersRepository extends ServiceEntityRepository
        public function findSingleUser($id):array
        {
            $qb=$this->createQueryBuilder('u')
-               ->select('u.id','u.Nom','u.Prenom','u.Mail','u.TypeUtilisateur')
+               ->select('u.id','u.Nom','u.Prenom','u.Mail','u.TypeUtilisateur', 'u.Status' )
                ->where('u.id = :identifiant')
                ->setParameter('identifiant', $id);
            $query= $qb->getQuery();
            return $query->execute();
 
        }
+
+
+
+
+
+
 
     /**
      * @param $mail
@@ -85,6 +91,34 @@ class AllUsersRepository extends ServiceEntityRepository
            $query= $qd->getQuery();
            return $query->execute();
        }
+       /**
+        * liste of user with numerotation order from 1 to n+1
+        */
+      public function listeAllUserWithNum():array
+      {
+
+          $qb= $this->createQueryBuilder('u')
+              ->select( 'u.id','u.Prenom','u.Nom','u.Mail','u.TypeUtilisateur', 'u.Status','u.CreationDate')
+              ->orderBy('u.Nom','DESC');
+          $query= $qb->getQuery();
+          return $query->execute();
+      }
+      /**
+       * change user status
+       */
+      public function changeUserStatus($id)
+     {
+        $qb=$this->createQueryBuilder('u')
+            ->update('u')
+            ->set('u.Status',':status')
+            ->where('u.id = :editId ')
+            ->setParameter('status','active')
+            ->setParameter('editiId', $id);
+            $query= $qb->getQuery();
+            return $query->execute();
+     }
+
+
     // /**
     //  * @return AllUsers[] Returns an array of AllUsers objects
     //  */
