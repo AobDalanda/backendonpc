@@ -46,49 +46,37 @@ class UsersController extends AbstractController
 
     }
 
-    #[Route('/users/{id}', name: 'userRead', methods: 'Get')]
-    public function getAUser($id, AllUsersRepository $allUsersRepository): Response
+    /**
+     * @param AllUsers $users
+     * @return Response
+     * retrieve one user
+     */
+    #[Route('/users/{id}', name: 'user_show', methods: 'GET')]
+    public function getAUser(AllUsers $users): Response
     {
-        $theUser = $allUsersRepository->findSingleUser($id);
-        //On utilise un encodeur json
-        $encoders = [new JsonEncoder()];
-        //on instancierl e normaliseur pour convertir la collection recuperée en tableau
-        $normalizers = [new ObjectNormalizer()];
-        //on fait la conversion en json
-        //on instancie le convertisseur
-        $serializer = new Serializer($normalizers, $encoders);
-        // on convertit en json
-        // $jsonContent = $serializer->serialize($user, 'json');
-        $jsonContent = $serializer->serialize($theUser, 'json', [
-            'circular_reference_handler' => function ($object) {  return $object->getId();
-            }]);
-        // dd($jsonContent);
-        $response = new Response($jsonContent);
+        $data=$this->get('serializer')->serialize($users,'json');
+        $response= new Response($data);
+        $response->headers->set('Content-Type','application/json');
         return $response;
     }
 
     /**
      * Ajout
      */
-    #[Route('/users/ajouter', name: 'ajouter', methods: 'Post')]
-    public function addUser(Request $request)  {
+    #[Route('/users/ajouter', name: 'ajouterUser', methods: 'Post')]
+    public function addUser(Request $request, EntityManagerInterface $entityManager)  {
         if (!$request->isXmlHttpRequest())
-        {  $donnees = json_decode($request->getContent());
-            //On instancie un nouvel utilisateur
-            $user = new AllUsers();
-            $user->setNom($donnees->nom);
-            $user->setPrenom($donnees->prenom);
-            $user->setMail($donnees->email);
-            $user->setTypeUtilisateur($donnees->type_utilisateur);
-            $receivedPasse = ($donnees->password);
+        {
+            $data=$request->getContent();
+            $newUser=$this->get('serializer')->deserialize($data,'App\Entity\AllUsers','json');
+            $receivedPasse = ($newUser->getMotDePasse());
             $hashedPassword = password_hash($receivedPasse, PASSWORD_DEFAULT);
-            $user->setMotDePasse($hashedPassword);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
-            return new Response('Ok', 201);
+            $newUser->setMotDePasse($hashedPassword);
+            $entityManager->persist($newUser);
+            $entityManager->flush();
+            return new Response('Ok', Response::HTTP_CREATED);
         }
-        return new Response('not ok ', 404);
+        return new Response('not ok ', Response::HTTP_NOT_FOUND);
     }
 
     /**
