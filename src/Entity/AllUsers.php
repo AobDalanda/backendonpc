@@ -6,9 +6,14 @@ use App\Repository\AllUsersRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=AllUsersRepository::class)
+ * @UniqueEntity(fields={"Mail"}, message="Cet email est déja utilisé!")
  */
 class AllUsers
 {
@@ -16,11 +21,13 @@ class AllUsers
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("post:read")
      */
     private $id;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups("post:read")
      */
     private $Prenom;
 
@@ -31,16 +38,19 @@ class AllUsers
 
     /**
      * @ORM\Column(type="string", length=50)
+     *
      */
     private $TypeUtilisateur;
 
     /**
      * @ORM\Column(type="string", length=100, unique=true)
+     * @Assert\Email()
      */
     private $Mail;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank()
      */
     private $MotDePasse;
 

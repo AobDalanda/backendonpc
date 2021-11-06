@@ -5,53 +5,36 @@ namespace App\Controller;
 use App\Entity\AllUsers;
 use App\Repository\AllUsersRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 
 //#[Route('/users', name: 'api_')]
 class UsersController extends AbstractController
 {
-
     #[Route('/users', name: 'userListe', methods: 'Get')]
-    public function liste(AllUsersRepository $allUsersRepository): Response
+    public function liste(AllUsersRepository $allUsersRepository, SerializerInterface $serializer ): Response
     {
-        //on recupere la liste des utilisateurs
-        //$user= $allUsersRepository->findAll();
         $user = $allUsersRepository->apiFindAll();
-        //On utilise un encodeur json
-        $encoders = [new JsonEncoder()];
-        //on instancierl e normaliseur pour convertir la collection recuperée en tableau
-        $normalizers = [new ObjectNormalizer()];
-        //on fait la conversion en json
-        //on instancie le convertisseur
-        $serializer = new Serializer($normalizers, $encoders);
-        // on convertit en json
-        // $jsonContent = $serializer->serialize($user, 'json');
-        $jsonContent = $serializer->serialize($user, 'json', [
-            'circular_reference_handler' => function ($object) {
-                return $object->getId();
-            }]);
-        // dd($jsonContent);
-        $response = new Response($jsonContent);
+        $data=$serializer->serialize($user,'json' , ['Groups'=>'post:read']);
+        $response = new Response($data);
         $response->headers->set('Content-Type', 'application/json');
-        // Allow all websites
-        $response->headers->set('Access-Control-Allow-Origin', '*');
         return $response;
 
     }
 
-    /**
-     * @param AllUsers $users
-     * @return Response
-     * retrieve one user
-     */
-    #[Route('/users/{id}', name: 'user_show', methods: 'GET')]
+
+
+    #[Route('/users/{id}', name: 'user_show', methods: 'GET' )]
     public function getAUser(AllUsers $users): Response
     {
         $data=$this->get('serializer')->serialize($users,'json');
@@ -64,19 +47,29 @@ class UsersController extends AbstractController
      * Ajout
      */
     #[Route('/users/ajouter', name: 'ajouterUser', methods: 'Post')]
-    public function addUser(Request $request, EntityManagerInterface $entityManager)  {
-        if (!$request->isXmlHttpRequest())
-        {
-            $data=$request->getContent();
-            $newUser=$this->get('serializer')->deserialize($data,'App\Entity\AllUsers','json');
-            $receivedPasse = ($newUser->getMotDePasse());
-            $hashedPassword = password_hash($receivedPasse, PASSWORD_DEFAULT);
-            $newUser->setMotDePasse($hashedPassword);
-            $entityManager->persist($newUser);
-            $entityManager->flush();
-            return new Response('Ok', Response::HTTP_CREATED);
-        }
-        return new Response('not ok ', Response::HTTP_NOT_FOUND);
+    public function addUser(Request $request, EntityManagerInterface $emr, ValidatorInterface $validator)  {
+
+                $data=$request->getContent();
+           try{
+               $newUser=$this->get('serializer')->deserialize($data,AllUsers::class,'json');
+               $receivedPasse = ($newUser->getMotDePasse());
+               $hashedPassword = password_hash($receivedPasse, PASSWORD_DEFAULT);
+               $newUser->setMotDePasse($hashedPassword);
+
+               $errors = $validator->validate($newUser);
+                  if(count($errors)>0){
+                     return $this->json($errors, 400);
+                  }
+
+               $emr->persist($newUser);
+               $emr->flush();
+               return new Response('Ok', Response::HTTP_CREATED);
+           }catch (\Exception $e){
+               return $this->json([
+                   'status'=>400,
+                   'message'=>$e->getMessage()
+               ], 400);
+           }
     }
 
     /**

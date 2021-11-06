@@ -26,7 +26,7 @@ class AllUsersRepository extends ServiceEntityRepository
       public function apiFindAll(): array
       {
           $qb= $this->createQueryBuilder('u')
-              ->select('u.id','u.Nom','u.Prenom','u.Mail','u.TypeUtilisateur')
+              ->select('u.id','u.Nom','u.Prenom','u.Mail','u.TypeUtilisateur', 'u.Status')
               ->orderBy('u.Nom','DESC');
           $query= $qb->getQuery();
           return $query->execute();
