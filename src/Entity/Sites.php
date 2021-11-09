@@ -97,6 +97,12 @@ class Sites
      */
     private $PlacesDispo;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Etablissements::class, inversedBy="sites")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $etablissement;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -290,6 +296,18 @@ class Sites
     public function setPlacesDispo(string $PlacesDispo): self
     {
         $this->PlacesDispo = $PlacesDispo;
+
+        return $this;
+    }
+
+    public function getEtablissement(): ?Etablissements
+    {
+        return $this->etablissement;
+    }
+
+    public function setEtablissement(?Etablissements $etablissement): self
+    {
+        $this->etablissement = $etablissement;
 
         return $this;
     }

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ContactsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -56,6 +58,16 @@ class Contacts
      * @ORM\Column(type="text")
      */
     private $Commentaire;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Etablissements::class, inversedBy="contacts")
+     */
+    private $etablissement;
+
+    public function __construct()
+    {
+        $this->etablissement = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -154,6 +166,30 @@ class Contacts
     public function setCommentaire(string $Commentaire): self
     {
         $this->Commentaire = $Commentaire;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Etablissements[]
+     */
+    public function getEtablissement(): Collection
+    {
+        return $this->etablissement;
+    }
+
+    public function addEtablissement(Etablissements $etablissement): self
+    {
+        if (!$this->etablissement->contains($etablissement)) {
+            $this->etablissement[] = $etablissement;
+        }
+
+        return $this;
+    }
+
+    public function removeEtablissement(Etablissements $etablissement): self
+    {
+        $this->etablissement->removeElement($etablissement);
 
         return $this;
     }

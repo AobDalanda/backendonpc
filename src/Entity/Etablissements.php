@@ -378,10 +378,22 @@ class Etablissements
      */
     private $ordresParticipationsProduits;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Sites::class, mappedBy="etablissement", orphanRemoval=true)
+     */
+    private $sites;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Contacts::class, mappedBy="etablissement")
+     */
+    private $contacts;
+
     public function __construct()
     {
         $this->ordreparticipationproduit = new ArrayCollection();
         $this->ordresParticipationsProduits = new ArrayCollection();
+        $this->sites = new ArrayCollection();
+        $this->contacts = new ArrayCollection();
     }
 
 
@@ -1265,6 +1277,63 @@ class Etablissements
             if ($ordresParticipationsProduit->getEtablissements() === $this) {
                 $ordresParticipationsProduit->setEtablissements(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Sites[]
+     */
+    public function getSites(): Collection
+    {
+        return $this->sites;
+    }
+
+    public function addSite(Sites $site): self
+    {
+        if (!$this->sites->contains($site)) {
+            $this->sites[] = $site;
+            $site->setEtablissement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSite(Sites $site): self
+    {
+        if ($this->sites->removeElement($site)) {
+            // set the owning side to null (unless already changed)
+            if ($site->getEtablissement() === $this) {
+                $site->setEtablissement(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Contacts[]
+     */
+    public function getContacts(): Collection
+    {
+        return $this->contacts;
+    }
+
+    public function addContact(Contacts $contact): self
+    {
+        if (!$this->contacts->contains($contact)) {
+            $this->contacts[] = $contact;
+            $contact->addEtablissement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContact(Contacts $contact): self
+    {
+        if ($this->contacts->removeElement($contact)) {
+            $contact->removeEtablissement($this);
         }
 
         return $this;
