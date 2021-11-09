@@ -21,6 +21,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 //#[Route('/users', name: 'api_')]
 class UsersController extends AbstractController
 {
+
+
     #[Route('/users', name: 'userListe', methods: 'Get')]
     public function liste(AllUsersRepository $allUsersRepository, SerializerInterface $serializer ): Response
     {
@@ -34,8 +36,11 @@ class UsersController extends AbstractController
 
 
 
-    #[Route('/users/{id}', name: 'user_show', methods: 'GET' )]
-    public function getAUser(AllUsers $users): Response
+    //#[Route('/users/detail/{id}', name: 'user_show', methods: 'GET', requirements:{'id'=''\d+''} )]
+    /**
+     * @Route("/users/detail/{id}", name="user_show", requirements={"id":"\d+"})
+     */
+    public function SingleUser(AllUsers $users): Response
     {
         $data=$this->get('serializer')->serialize($users,'json');
         $response= new Response($data);
@@ -55,15 +60,16 @@ class UsersController extends AbstractController
                $receivedPasse = ($newUser->getMotDePasse());
                $hashedPassword = password_hash($receivedPasse, PASSWORD_DEFAULT);
                $newUser->setMotDePasse($hashedPassword);
-
+               $newUser->setCreationDate(new \DateTime());
                $errors = $validator->validate($newUser);
                   if(count($errors)>0){
                      return $this->json($errors, 400);
                   }
-
                $emr->persist($newUser);
                $emr->flush();
-               return new Response('Ok', Response::HTTP_CREATED);
+               $response = new Response('Ok', Response::HTTP_CREATED);
+               $response->headers->set('Access-Control-Allow-Origin', '*');
+               return $response;
            }catch (\Exception $e){
                return $this->json([
                    'status'=>400,
@@ -82,36 +88,25 @@ class UsersController extends AbstractController
         if (!$request->isXmlHttpRequest()) {
             //  $donnees = json_encode($request->getContent());
              $donnees = $request->getContent();
-             $donnees = json_decode($donnees, true);
-             $identifiant = $donnees[0]['Mail']; //$identifiant = $donnees.mail();
-            //dd($identifiant);
-            $sendPassword = $donnees[0]['MotDePasse']; //$sendPassword=$donnees->MotDePasse;
-            $connectedUser = $allUsersRepo->finduserByMail($identifiant);
+            $newUser=$this->get('serializer')->deserialize($donnees,AllUsers::class,'json');
+             $identifiant =  $newUser->getMail();
+             $sendPassword=$newUser->getMotDePasse();
+             $connectedUser = $allUsersRepo->finduserByMail($identifiant);
             $hashedPassword = $connectedUser[0]['MotDePasse'];
             $connectedUser[0]['MotDePasse'] = '';
             unset($connectedUser[0]['MotDePasse']);
-            //dd($connectedUser);
-            //On utilise un encodeur json
-            $encoders = [new JsonEncoder()];
-            //on instancierl et normaliseur pour convertir la collection recuperée en tableau
-            $normalizers = [new ObjectNormalizer()];
-            //on fait la conversion en json
-            //on instancie le convertisseur
-            $serializer = new Serializer($normalizers, $encoders);
-            $jsonContent = $serializer->serialize($connectedUser, 'json', [
-                'circular_reference_handler'=>function($object){   return $object->getId();
-                }]);
-            if (password_verify($sendPassword, $hashedPassword)) {
+            $jsonContent=$this->get('serializer')->serialize($connectedUser,'json');
+            if (password_verify($sendPassword, $hashedPassword) && $connectedUser[0]['Status']=='active' ) {
                 return new  Response($jsonContent, 200);
-
-            } else {
-
+            } else  if (password_verify($sendPassword, $hashedPassword) && $connectedUser[0]['Status']!='active' ) {
+                return new  Response('compte désactive.', 200);
+            }
+            else {
                 return new  Response('Invalid password.', 200);
             }
         }
         return new Response('not ok ', 404);
     }
-
     /**
      *Liste all user with numerotation from 1 to n+1
      */
@@ -133,9 +128,9 @@ class UsersController extends AbstractController
             }]);
         // dd($jsonContent);
         $response = new Response($jsonContent);
-        $response->headers->set('Content-Type', 'application/json');
+        //$response->headers->set('Content-Type', 'application/json');
         // Allow all websites
-        $response->headers->set('Access-Control-Allow-Origin', '*');
+        //$response->headers->set('Access-Control-Allow-Origin', '*');
         return $response;
     }
 

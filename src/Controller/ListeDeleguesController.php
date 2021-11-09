@@ -33,7 +33,7 @@ class ListeDeleguesController extends AbstractController
         $response= new Response($jsonContent);
         $response->headers->set('Content-Type', 'application/json');
         // Allow all websites
-        $response->headers->set('Access-Control-Allow-Origin', '*');
+        //$response->headers->set('Access-Control-Allow-Origin', '*');
         return $response;
     }
 }

@@ -44,7 +44,7 @@ class AllUsers
 
     /**
      * @ORM\Column(type="string", length=100, unique=true)
-     * @Assert\Email()
+     *
      */
     private $Mail;
 
