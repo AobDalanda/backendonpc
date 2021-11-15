@@ -10,6 +10,9 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
+
+
+#[Route('/api', name: 'api')]
 class ListeDeleguesController extends AbstractController
 {
     #[Route('/liste/delegues', name: 'liste_delegues')]

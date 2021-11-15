@@ -18,7 +18,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 
-//#[Route('/users', name: 'api_')]
+#[Route('/api', name: 'api')]
 class UsersController extends AbstractController
 {
 

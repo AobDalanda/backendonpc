@@ -19,6 +19,22 @@ class ProduitsRepository extends ServiceEntityRepository
         parent::__construct($registry, Produits::class);
     }
 
+
+    /**
+     * Retourne la liste des produits
+     */
+    public function listeprod():array
+    {
+          $qb=$this->createQueryBuilder('p')
+               ->select('p.id', 'p.Identifiant', 'p.Designation', 'p.Prix')
+              ->orderBy('p.Identifiant','ASC');
+           $query= $qb->getQuery();
+           return $query->execute();
+    }
+
+
+
+
     // /**
     //  * @return Produits[] Returns an array of Produits objects
     //  */

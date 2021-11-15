@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Departements;
 use App\Repository\DepartementsRepository;
 use App\Repository\DiocesesRepository;
+use App\Repository\ProduitsRepository;
 use App\Repository\SourcesMisesAJourRepository;
 use App\Repository\TypesEtablissementsRepository;
 use http\Env\Request;
@@ -14,7 +15,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
 
+
+#[Route('/api', name: 'api')]
 class ExtractDataController extends AbstractController
 {
     #[Route('/extract/sourcemaj', name: 'extract_maj')]
@@ -89,6 +93,17 @@ class ExtractDataController extends AbstractController
         $response->headers->set('Content-Type', 'application/json');
         // Allow all websites
        // $response->headers->set('Access-Control-Allow-Origin', '*');
+        return $response;
+    }
+
+
+    #[Route('/extract/listeProduit', name: 'extract_listeproduit', methods:'GET')]
+    public function listeproduct(ProduitsRepository $produitsRepos, SerializerInterface $serializer):Response
+    {
+        $listeProduct = $produitsRepos->listeprod();
+        $data=$serializer->serialize($listeProduct,'json' , ['Groups'=>'post:read']);
+        $response = new Response($data);
+        $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
 

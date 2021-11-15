@@ -38,12 +38,12 @@ class OrdresParticipationsProduits
      * @ORM\JoinColumn(nullable=false)
      */
     private $ordreparticipations;
-
+/*
     /**
      * @ORM\ManyToOne(targetEntity=Etablissements::class, inversedBy="ordresParticipationsProduits")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $etablissements;
+    //private $etablissements;
 
 
 

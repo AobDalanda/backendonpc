@@ -325,11 +325,11 @@ class Etablissements
      * @ORM\Column(type="string", length=20)
      */
     private $OptionPrint;
-
+/*
     /**
      * @ORM\OneToMany(targetEntity=OrdresParticipationsProduits::class, mappedBy="etablissements", orphanRemoval=true)
      */
-    private $ordreparticipationproduit;
+  //  private $ordreparticipationproduit;
 
     /**
      * @ORM\ManyToOne(targetEntity=Dioceses::class, inversedBy="etablissments")
