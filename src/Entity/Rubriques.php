@@ -60,7 +60,7 @@ class Rubriques
     private $Items_Identifiant;
 
     /**
-     * @ORM\Column(type="string", columnDefinition="ENUM('oui', 'non')")
+     * @ORM\Column(type="string", length=50, nullable=true)
      */
         //* @ORM\Column(type="string", columnDefinition="ENUM('oui', 'non')")
     private $ParutionMEP;

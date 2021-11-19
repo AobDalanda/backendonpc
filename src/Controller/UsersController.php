@@ -85,7 +85,7 @@ class UsersController extends AbstractController
     public function logue(Request $request, AllUsersRepository $allUsersRepo)
     {//recuperation des donnees
 
-        if (!$request->isXmlHttpRequest()) {
+
             //  $donnees = json_encode($request->getContent());
              $donnees = $request->getContent();
             $newUser=$this->get('serializer')->deserialize($donnees,AllUsers::class,'json');
@@ -97,6 +97,7 @@ class UsersController extends AbstractController
             unset($connectedUser[0]['MotDePasse']);
             $jsonContent=$this->get('serializer')->serialize($connectedUser,'json');
             if (password_verify($sendPassword, $hashedPassword) && $connectedUser[0]['Status']=='active' ) {
+
                 return new  Response($jsonContent, 200);
             } else  if (password_verify($sendPassword, $hashedPassword) && $connectedUser[0]['Status']!='active' ) {
                 return new  Response('compte désactive.', 200);
@@ -104,8 +105,6 @@ class UsersController extends AbstractController
             else {
                 return new  Response('Invalid password.', 200);
             }
-        }
-        return new Response('not ok ', 404);
     }
     /**
      *Liste all user with numerotation from 1 to n+1
