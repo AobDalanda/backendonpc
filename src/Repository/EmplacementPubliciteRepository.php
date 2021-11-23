@@ -19,6 +19,16 @@ class EmplacementPubliciteRepository extends ServiceEntityRepository
         parent::__construct($registry, EmplacementPublicite::class);
     }
 
+
+    public function findEmplacementPub(){
+        $qd=$this->createQueryBuilder('e')
+            ->select('e.id', 'e.Libelle') ;
+        $query= $qd->getQuery();
+        return $query->execute();
+    }
+
+
+
     // /**
     //  * @return EmplacementPublicite[] Returns an array of EmplacementPublicite objects
     //  */

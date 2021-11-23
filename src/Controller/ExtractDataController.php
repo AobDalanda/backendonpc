@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Departements;
 use App\Repository\DepartementsRepository;
 use App\Repository\DiocesesRepository;
+use App\Repository\EmplacementPubliciteRepository;
 use App\Repository\FormatsPublicitesRepository;
 use App\Repository\ProduitsRepository;
 use App\Repository\SourcesMisesAJourRepository;
@@ -96,6 +97,24 @@ class ExtractDataController extends AbstractController
         return $response;
 
     }
+
+    #[Route('/extract/emplPub', name: 'extract_emplacementpub', methods: 'GET')]
+    public function dataemplacementPub(EmplacementPubliciteRepository $emplacementPubliciteRepos):Response
+    {
+        $listeEmplPub=$emplacementPubliciteRepos->findEmplacementPub();
+        $encoders = [new JsonEncoder()];
+        $normalizers = [new ObjectNormalizer()];
+        $serializer=new Serializer($normalizers,$encoders);
+        // on convertit en json
+        $jsonContent = $serializer->serialize($listeEmplPub, 'json',[
+            'circular_reference_handler'=>function($object){   return $object->getId();
+            } ]);
+        $response= new Response($jsonContent);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+
+    }
+
 
 
 
