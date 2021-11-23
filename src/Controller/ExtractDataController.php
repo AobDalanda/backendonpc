@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Departements;
 use App\Repository\DepartementsRepository;
 use App\Repository\DiocesesRepository;
+use App\Repository\FormatsPublicitesRepository;
 use App\Repository\ProduitsRepository;
 use App\Repository\SourcesMisesAJourRepository;
 use App\Repository\TypesEtablissementsRepository;
@@ -77,6 +78,27 @@ class ExtractDataController extends AbstractController
         return $response;
 
     }
+
+
+    #[Route('/extract/formatpub', name: 'extract_formatpub', methods: 'GET')]
+    public function dataformatpub(FormatsPublicitesRepository $formatsPublicitesRepo):Response
+    {
+        $listeFormatPub=$formatsPublicitesRepo->findformatpub();
+        $encoders = [new JsonEncoder()];
+        $normalizers = [new ObjectNormalizer()];
+        $serializer=new Serializer($normalizers,$encoders);
+        // on convertit en json
+        $jsonContent = $serializer->serialize($listeFormatPub, 'json',[
+            'circular_reference_handler'=>function($object){   return $object->getId();
+            } ]);
+        $response= new Response($jsonContent);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+
+    }
+
+
+
 
     #[Route('/extract/typeetabl', name: 'extract_typeEtabl', methods: 'Get')]
     public function typeEtablishmt(TypesEtablissementsRepository $etablissementsRepos):Response

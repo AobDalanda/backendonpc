@@ -19,6 +19,15 @@ class FormatsPublicitesRepository extends ServiceEntityRepository
         parent::__construct($registry, FormatsPublicites::class);
     }
 
+    public function findformatpub(){
+        $qd=$this->createQueryBuilder('f')
+            ->select('f.id', 'f.Libelle') ;
+        $query= $qd->getQuery();
+        return $query->execute();
+    }
+
+
+
     // /**
     //  * @return FormatsPublicites[] Returns an array of FormatsPublicites objects
     //  */
