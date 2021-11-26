@@ -19,6 +19,14 @@ class RegionsRepository extends ServiceEntityRepository
         parent::__construct($registry, Regions::class);
     }
 
+
+    public function findRegion(){
+        $qd=$this->createQueryBuilder('r')
+            ->select('r.id', 'r.Identifiant','r.Libelle') ;
+        $query= $qd->getQuery();
+        return $query->execute();
+    }
+
     // /**
     //  * @return Regions[] Returns an array of Regions objects
     //  */

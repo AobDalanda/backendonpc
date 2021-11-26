@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\INsertionWeb;
+use App\Entity\InsertionWeb;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method INsertionWeb|null find($id, $lockMode = null, $lockVersion = null)
- * @method INsertionWeb|null findOneBy(array $criteria, array $orderBy = null)
- * @method INsertionWeb[]    findAll()
- * @method INsertionWeb[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method InsertionWeb|null find($id, $lockMode = null, $lockVersion = null)
+ * @method InsertionWeb|null findOneBy(array $criteria, array $orderBy = null)
+ * @method InsertionWeb[]    findAll()
+ * @method InsertionWeb[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class INsertionWebRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, INsertionWeb::class);
+        parent::__construct($registry, InsertionWeb::class);
     }
 
     // /**
-    //  * @return INsertionWeb[] Returns an array of INsertionWeb objects
+    //  * @return InsertionWeb[] Returns an array of InsertionWeb objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class INsertionWebRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?INsertionWeb
+    public function findOneBySomeField($value): ?InsertionWeb
     {
         return $this->createQueryBuilder('i')
             ->andWhere('i.exampleField = :val')

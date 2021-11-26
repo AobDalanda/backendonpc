@@ -1346,14 +1346,14 @@ class Etablissements
     }
 
     /**
-     * @return Collection|INsertionWeb[]
+     * @return Collection|InsertionWeb[]
      */
     public function getInsertionWebs(): Collection
     {
         return $this->insertionWebs;
     }
 
-    public function addInsertionWeb(INsertionWeb $insertionWeb): self
+    public function addInsertionWeb(InsertionWeb $insertionWeb): self
     {
         if (!$this->insertionWebs->contains($insertionWeb)) {
             $this->insertionWebs[] = $insertionWeb;
@@ -1363,7 +1363,7 @@ class Etablissements
         return $this;
     }
 
-    public function removeInsertionWeb(INsertionWeb $insertionWeb): self
+    public function removeInsertionWeb(InsertionWeb $insertionWeb): self
     {
         if ($this->insertionWebs->removeElement($insertionWeb)) {
             // set the owning side to null (unless already changed)

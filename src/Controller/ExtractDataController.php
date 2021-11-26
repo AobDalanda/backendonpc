@@ -8,6 +8,7 @@ use App\Repository\DiocesesRepository;
 use App\Repository\EmplacementPubliciteRepository;
 use App\Repository\FormatsPublicitesRepository;
 use App\Repository\ProduitsRepository;
+use App\Repository\RegionsRepository;
 use App\Repository\SourcesMisesAJourRepository;
 use App\Repository\TypesEtablissementsRepository;
 use App\Repository\VillesRepository;
@@ -125,6 +126,25 @@ class ExtractDataController extends AbstractController
         $serializer=new Serializer($normalizers,$encoders);
         // on convertit en json
         $jsonContent = $serializer->serialize($listeVille, 'json',[
+            'circular_reference_handler'=>function($object){   return $object->getId();
+            } ]);
+        $response= new Response($jsonContent);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+
+    }
+
+
+
+    #[Route('/extract/region', name: 'extract_region', methods: 'GET')]
+    public function regions(RegionsRepository $regionsRepos):Response
+    {
+        $listeRegions=$regionsRepos->findRegion();
+        $encoders = [new JsonEncoder()];
+        $normalizers = [new ObjectNormalizer()];
+        $serializer=new Serializer($normalizers,$encoders);
+        // on convertit en json
+        $jsonContent = $serializer->serialize($listeRegions, 'json',[
             'circular_reference_handler'=>function($object){   return $object->getId();
             } ]);
         $response= new Response($jsonContent);
