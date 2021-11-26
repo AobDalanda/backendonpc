@@ -10,6 +10,7 @@ use App\Repository\FormatsPublicitesRepository;
 use App\Repository\ProduitsRepository;
 use App\Repository\SourcesMisesAJourRepository;
 use App\Repository\TypesEtablissementsRepository;
+use App\Repository\VillesRepository;
 use http\Env\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -107,6 +108,23 @@ class ExtractDataController extends AbstractController
         $serializer=new Serializer($normalizers,$encoders);
         // on convertit en json
         $jsonContent = $serializer->serialize($listeEmplPub, 'json',[
+            'circular_reference_handler'=>function($object){   return $object->getId();
+            } ]);
+        $response= new Response($jsonContent);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+
+    }
+
+    #[Route('/extract/ville', name: 'extract_ville', methods: 'GET')]
+    public function ville(VillesRepository $villesRepos):Response
+    {
+        $listeVille=$villesRepos->findTown();
+        $encoders = [new JsonEncoder()];
+        $normalizers = [new ObjectNormalizer()];
+        $serializer=new Serializer($normalizers,$encoders);
+        // on convertit en json
+        $jsonContent = $serializer->serialize($listeVille, 'json',[
             'circular_reference_handler'=>function($object){   return $object->getId();
             } ]);
         $response= new Response($jsonContent);

@@ -388,12 +388,18 @@ class Etablissements
      */
     private $contacts;
 
+    /**
+     * @ORM\OneToMany(targetEntity=InsertionWeb::class, mappedBy="etablissement", orphanRemoval=true)
+     */
+    private $insertionWebs;
+
     public function __construct()
     {
         $this->ordreparticipationproduit = new ArrayCollection();
         $this->ordresParticipationsProduits = new ArrayCollection();
         $this->sites = new ArrayCollection();
         $this->contacts = new ArrayCollection();
+        $this->insertionWebs = new ArrayCollection();
     }
 
 
@@ -1334,6 +1340,36 @@ class Etablissements
     {
         if ($this->contacts->removeElement($contact)) {
             $contact->removeEtablissement($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|INsertionWeb[]
+     */
+    public function getInsertionWebs(): Collection
+    {
+        return $this->insertionWebs;
+    }
+
+    public function addInsertionWeb(INsertionWeb $insertionWeb): self
+    {
+        if (!$this->insertionWebs->contains($insertionWeb)) {
+            $this->insertionWebs[] = $insertionWeb;
+            $insertionWeb->setEtablissement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInsertionWeb(INsertionWeb $insertionWeb): self
+    {
+        if ($this->insertionWebs->removeElement($insertionWeb)) {
+            // set the owning side to null (unless already changed)
+            if ($insertionWeb->getEtablissement() === $this) {
+                $insertionWeb->setEtablissement(null);
+            }
         }
 
         return $this;

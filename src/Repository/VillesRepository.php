@@ -19,6 +19,15 @@ class VillesRepository extends ServiceEntityRepository
         parent::__construct($registry, Villes::class);
     }
 
+    public function findTown(){
+        $qd=$this->createQueryBuilder('v')
+            ->select('v.id', 'v.Libelle','v.Departements_Numero') ;
+        $query= $qd->getQuery();
+        return $query->execute();
+    }
+
+
+
     // /**
     //  * @return Villes[] Returns an array of Villes objects
     //  */
